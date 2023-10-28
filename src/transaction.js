@@ -41,6 +41,10 @@ function isOutput(out) {
 class Transaction {
   constructor() {
     this.version = 1;
+    this.assettype = 0;
+    this.ticker = Buffer.from("","hex");
+    this.headline = Buffer.from("","hex");
+    this.payload = Buffer.from("","hex");
     this.locktime = 0;
     this.ins = [];
     this.outs = [];
@@ -49,6 +53,14 @@ class Transaction {
     const bufferReader = new bufferutils_1.BufferReader(buffer);
     const tx = new Transaction();
     tx.version = bufferReader.readInt32();
+
+    if(tx.version == 10) {
+      tx.assettype = bufferReader.readInt32();
+      tx.ticker = bufferReader.readVarSlice();
+      tx.headline = bufferReader.readVarSlice();
+      tx.payload = bufferReader.readVarSlice();
+    }
+
     const marker = bufferReader.readUInt8();
     const flag = bufferReader.readUInt8();
     let hasWitnesses = false;
@@ -155,8 +167,9 @@ class Transaction {
   }
   byteLength(_ALLOW_WITNESS = true) {
     const hasWitnesses = _ALLOW_WITNESS && this.hasWitnesses();
+    const assetSize = this.version == 10 ? (4 + varSliceSize(this.ticker) + varSliceSize(this.headline) + varSliceSize(this.payload)) : 0
     return (
-      (hasWitnesses ? 10 : 8) +
+      (hasWitnesses ? 10 : 8)  + assetSize +
       bufferutils_1.varuint.encodingLength(this.ins.length) +
       bufferutils_1.varuint.encodingLength(this.outs.length) +
       this.ins.reduce((sum, input) => {
@@ -175,6 +188,10 @@ class Transaction {
   clone() {
     const newTx = new Transaction();
     newTx.version = this.version;
+    newTx.assettype = this.assettype;
+    newTx.ticker = this.ticker;
+    newTx.headline = this.headline;
+    newTx.payload = this.payload;
     newTx.locktime = this.locktime;
     newTx.ins = this.ins.map(txIn => {
       return {
@@ -496,6 +513,14 @@ class Transaction {
       initialOffset || 0,
     );
     bufferWriter.writeInt32(this.version);
+    if(this.version == 10) {
+      console.log("version details ", this.version);
+      bufferWriter.writeInt32(this.assettype);
+      bufferWriter.writeVarSlice(this.ticker);
+      bufferWriter.writeVarSlice(this.headline);
+      bufferWriter.writeVarSlice(this.payload);
+    }
+
     const hasWitnesses = _ALLOW_WITNESS && this.hasWitnesses();
     if (hasWitnesses) {
       bufferWriter.writeUInt8(Transaction.ADVANCED_TRANSACTION_MARKER);
