@@ -2051,7 +2051,7 @@ function inputFinalizeGetAmts(
     0,
   );
   const fee = inputAmount - outputAmount;
-  if (fee < 0) {
+  if (fee < 0 && tx.version != 10) {
     throw new Error('Outputs are spending more than Inputs');
   }
   const bytes = tx.virtualSize();
