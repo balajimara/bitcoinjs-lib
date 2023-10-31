@@ -58,7 +58,7 @@ class Transaction {
       tx.assettype = bufferReader.readInt32();
       tx.ticker = bufferReader.readVarSlice();
       tx.headline = bufferReader.readVarSlice();
-      tx.payload = bufferReader.readVarSlice();
+      tx.payload = bufferReader.readSlice(32);
     }
 
     const marker = bufferReader.readUInt8();
@@ -167,7 +167,7 @@ class Transaction {
   }
   byteLength(_ALLOW_WITNESS = true) {
     const hasWitnesses = _ALLOW_WITNESS && this.hasWitnesses();
-    const assetSize = this.version == 10 ? (4 + varSliceSize(this.ticker) + varSliceSize(this.headline) + varSliceSize(this.payload)) : 0
+    const assetSize = this.version == 10 ? (4 + varSliceSize(this.ticker) + varSliceSize(this.headline) + 32) : 0
     return (
       (hasWitnesses ? 10 : 8)  + assetSize +
       bufferutils_1.varuint.encodingLength(this.ins.length) +
@@ -518,7 +518,7 @@ class Transaction {
       bufferWriter.writeInt32(this.assettype);
       bufferWriter.writeVarSlice(this.ticker);
       bufferWriter.writeVarSlice(this.headline);
-      bufferWriter.writeVarSlice(this.payload);
+      bufferWriter.writeSlice(this.payload);
     }
 
     const hasWitnesses = _ALLOW_WITNESS && this.hasWitnesses();
