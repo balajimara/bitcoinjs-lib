@@ -30,6 +30,7 @@ export declare class Transaction {
     ticker: Buffer;
     headline: Buffer;
     payload: Buffer;
+    payloaddata: Buffer;
     ins: Input[];
     outs: Output[];
     isCoinbase(): boolean;

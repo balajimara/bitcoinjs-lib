@@ -72,6 +72,8 @@ export declare class Psbt {
     set headline(headline: string);
     get payload(): string;
     set payload(payload: string);
+    get payloaddata(): string;
+    set payloaddata(payloaddata: string);
     get txInputs(): PsbtTxInput[];
     get txOutputs(): PsbtTxOutput[];
     combine(...those: Psbt[]): this;
@@ -83,6 +85,7 @@ export declare class Psbt {
     setTicker(ticker: string): this;
     setHeadline(headline: string): this;
     setPayload(payload: string): this;
+    setPayloadData(payloaddata: string): this;
     setInputSequence(inputIndex: number, sequence: number): this;
     addInputs(inputDatas: PsbtInputExtended[]): this;
     addInput(inputData: PsbtInputExtended): this;

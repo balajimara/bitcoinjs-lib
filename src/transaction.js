@@ -45,6 +45,7 @@ class Transaction {
     this.ticker = Buffer.from("","hex");
     this.headline = Buffer.from("","hex");
     this.payload = Buffer.from("","hex");
+    this.payloaddata = Buffer.from("","hex");
     this.locktime = 0;
     this.ins = [];
     this.outs = [];
@@ -59,6 +60,7 @@ class Transaction {
       tx.ticker = bufferReader.readVarSlice();
       tx.headline = bufferReader.readVarSlice();
       tx.payload = bufferReader.readSlice(32);
+      tx.payloaddata = bufferReader.readVarSlice();
     }
 
     const marker = bufferReader.readUInt8();
@@ -167,7 +169,7 @@ class Transaction {
   }
   byteLength(_ALLOW_WITNESS = true) {
     const hasWitnesses = _ALLOW_WITNESS && this.hasWitnesses();
-    const assetSize = this.version == 10 ? (4 + varSliceSize(this.ticker) + varSliceSize(this.headline) + 32) : 0
+    const assetSize = this.version == 10 ? (4 + varSliceSize(this.ticker) + varSliceSize(this.headline) + 32 + varSliceSize(this.payloaddata)) : 0
     return (
       (hasWitnesses ? 10 : 8)  + assetSize +
       bufferutils_1.varuint.encodingLength(this.ins.length) +
@@ -192,6 +194,7 @@ class Transaction {
     newTx.ticker = this.ticker;
     newTx.headline = this.headline;
     newTx.payload = this.payload;
+    newTx.payloaddata = this.payloaddata;
     newTx.locktime = this.locktime;
     newTx.ins = this.ins.map(txIn => {
       return {
@@ -519,6 +522,7 @@ class Transaction {
       bufferWriter.writeVarSlice(this.ticker);
       bufferWriter.writeVarSlice(this.headline);
       bufferWriter.writeSlice(this.payload);
+      bufferWriter.writeVarSlice(this.payloaddata);
     }
 
     const hasWitnesses = _ALLOW_WITNESS && this.hasWitnesses();

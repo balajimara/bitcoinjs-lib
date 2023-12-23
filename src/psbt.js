@@ -148,6 +148,13 @@ class Psbt {
     this.setPayload(payload);
   }
 
+  get payloaddata() {
+    return this.__CACHE.__TX.payloaddata;
+  }
+  set payloaddata(payloaddata) {
+    this.setPayloadData(payloaddata);
+  }
+
   get txInputs() {
     return this.__CACHE.__TX.ins.map(input => ({
       hash: (0, bufferutils_1.cloneBuffer)(input.hash),
@@ -222,6 +229,14 @@ class Psbt {
     c.__EXTRACTED_TX = undefined;
     return this;
   }
+
+  setPayloadData(payloaddata) {
+    const c = this.__CACHE;
+    c.__TX.payloaddata = Buffer.from(payloaddata,"hex");
+    c.__EXTRACTED_TX = undefined;
+    return this;
+  }
+
 
   setLocktime(locktime) {
     check32Bit(locktime);
