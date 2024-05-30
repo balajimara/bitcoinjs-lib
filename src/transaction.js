@@ -171,7 +171,7 @@ class Transaction {
   }
   byteLength(_ALLOW_WITNESS = true) {
     const hasWitnesses = _ALLOW_WITNESS && this.hasWitnesses();
-    const assetSize = this.version == 10 ? (4 + varSliceSize(this.ticker) + varSliceSize(this.headline) + 32 + varSliceSize(this.payloaddata)) : 0
+    const assetSize = this.version == 10 ? (8 + varSliceSize(this.ticker) + varSliceSize(this.headline) + 32 + varSliceSize(this.payloaddata)) : 0
     return (
       (hasWitnesses ? 10 : 8)  + assetSize +
       bufferutils_1.varuint.encodingLength(this.ins.length) +
