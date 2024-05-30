@@ -64,6 +64,8 @@ export declare class Psbt {
     set version(version: number);
     get assettype(): number;
     set assettype(assettype: number);
+    get precision(): number;
+    set precision(precision: number);
     get locktime(): number;
     set locktime(locktime: number);
     get ticker(): string;
@@ -81,6 +83,7 @@ export declare class Psbt {
     setMaximumFeeRate(satoshiPerByte: number): void;
     setVersion(version: number): this;
     setAssetType(assettype: number): this;
+    setPrecisionType(precision: number): this;
     setLocktime(locktime: number): this;
     setTicker(ticker: string): this;
     setHeadline(headline: string): this;

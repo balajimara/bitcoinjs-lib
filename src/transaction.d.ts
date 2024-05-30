@@ -26,6 +26,7 @@ export declare class Transaction {
     static isCoinbaseHash(buffer: Buffer): boolean;
     version: number;
     assettype: number;
+    precision: number;
     locktime: number;
     ticker: Buffer;
     headline: Buffer;

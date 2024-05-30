@@ -120,6 +120,12 @@ class Psbt {
   set assettype(assettype) {
     this.setAssetType(assettype);
   }
+  get precision() {
+    return this.__CACHE.__TX.precision;
+  }
+  set precision(precision) {
+    this.setPrecisionType(precision);
+  }
   get locktime() {
     return this.__CACHE.__TX.locktime;
   }
@@ -208,6 +214,15 @@ class Psbt {
     c.__EXTRACTED_TX = undefined;
     return this;
   }
+
+  setPrecisionType(precision) {
+    check32Bit(precision);
+    const c = this.__CACHE;
+    c.__TX.precision = precision;
+    c.__EXTRACTED_TX = undefined;
+    return this;
+  }
+
 
   setTicker(ticker) {
     const c = this.__CACHE;

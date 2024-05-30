@@ -42,6 +42,7 @@ class Transaction {
   constructor() {
     this.version = 1;
     this.assettype = 0;
+    this.precision = 0;
     this.ticker = Buffer.from("","hex");
     this.headline = Buffer.from("","hex");
     this.payload = Buffer.from("","hex");
@@ -57,6 +58,7 @@ class Transaction {
 
     if(tx.version == 10) {
       tx.assettype = bufferReader.readInt32();
+      tx.precision = bufferReader.readInt32();
       tx.ticker = bufferReader.readVarSlice();
       tx.headline = bufferReader.readVarSlice();
       tx.payload = bufferReader.readSlice(32);
@@ -191,6 +193,7 @@ class Transaction {
     const newTx = new Transaction();
     newTx.version = this.version;
     newTx.assettype = this.assettype;
+    newTx.precision = this.precision;
     newTx.ticker = this.ticker;
     newTx.headline = this.headline;
     newTx.payload = this.payload;
@@ -517,8 +520,8 @@ class Transaction {
     );
     bufferWriter.writeInt32(this.version);
     if(this.version == 10) {
-      console.log("version details ", this.version);
       bufferWriter.writeInt32(this.assettype);
+      bufferWriter.writeInt32(this.precision);
       bufferWriter.writeVarSlice(this.ticker);
       bufferWriter.writeVarSlice(this.headline);
       bufferWriter.writeSlice(this.payload);
