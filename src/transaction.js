@@ -490,6 +490,10 @@ class Transaction {
   getHash(forWitness) {
     // wtxid for coinbase is always 32 bytes of 0x00
     if (forWitness && this.isCoinbase()) return Buffer.alloc(32, 0);
+    // removing payload data before hash
+    const tx = this;
+    tx.payloaddata = Buffer.from("","hex");
+    
     return bcrypto.hash256(this.__toBuffer(undefined, undefined, forWitness));
   }
   getId() {
